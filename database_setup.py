@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from sqlalchemy import Column,String,Integer,ForeignKey,create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
