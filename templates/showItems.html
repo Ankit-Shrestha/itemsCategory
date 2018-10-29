@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+{%include "flash.html" %}
+
+<div>
+	<p><strong>{{category.categoryName}}</strong> <i>({{items|length}} items)</i></p>
+		{% for item in items %}
+			<ul class="list-group list-group-flush">
+				<a href = "{{url_for('showDescription' , categoryName = category.categoryName, itemName = item.itemName)}}" ><li class="list-group-item">{{item.itemName}}</li></a>
+			</ul>
+		{% endfor %}
+		{% if items|length == 0 %}
+			<p><i>There are no items in {{category.categoryName}}.</i></p>
+		{% endif %}
+		<a href="{{url_for('addItems', categoryName = category.categoryName)}}" class="btn btn-primary a-btn-slide-text">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        <span><strong>Add a item</strong></span> </a>
+</div>
+{% endblock %}

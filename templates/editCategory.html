@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<form action = "#" method="post">
+  <div class="form-group">
+    <label for= "name">Name:</label>
+    <input type="text" class="form-control" name ="name" placeholder="{{category.categoryName}}">
+  </div>
+  <div class="form-group">
+    <label for="sector">Sector:</label>
+    <input type="text" class="form-control" name = "sector" placeholder="{{category.categorySector}}">
+  </div>
+  <div class="form-group">
+    <label for="details">Details:</label>
+    <input type="text" class="form-control" name = "details" placeholder="{{category.categoryDetails}}">
+  </div>
+  <div class="form-group">
+    <label>Age Group:</label>
+    <input type="text" class="form-control" name = "agegroup" placeholder="{{category.categoryAgeGroup}}">
+  </div>
+  <label for="price">Price Range:</label>
+  <div class="input-group">
+  <div class="input-group-addon">$</div>
+  <input type ="text" class="form-control" maxlength="10" name="pricerange" placeholder="{{category.priceRange}}">
+  </div>
+  </br>
+  <button type="sumbit" class="btn btn-primary btn-lg btn-block">Submit</button>
+  <a href = "{{url_for('showAllCategories')}}"><button type="button" class="btn btn-secondary btn-lg btn-block">Cancel</button></a>
+
+</form>
+{% endblock %}

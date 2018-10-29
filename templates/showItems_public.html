@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+{%include "flash.html" %}
+
+<div>
+	<p>{{category.categoryName}} ({{items|length}} items)</p>
+		{% for item in items %}
+			<ul class="list-group list-group-flush">
+				<a href = "{{url_for('showDescription' , categoryName = category.categoryName, itemName = item.itemName)}}" ><li class="list-group-item">{{item.itemName}}</li></a>
+			</ul>
+		{% endfor %}
+		{% if items|length == 0 %}
+			<p>There are no items in {{category.categoryName}}.</p>
+		{% endif %}
+</div>
+{% endblock %}

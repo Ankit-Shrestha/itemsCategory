@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<div class="row">
+  <div class="col-sm-6 col-md-4">
+  	<div class ="thumbnail">
+      <div class="caption">
+        <h3>{{item.itemName}}</h3>
+        <h6 class = "card-subtitle mb-2 text-muted">{{item.price}}</h6>
+        <p style="word-break: break-all;">{{item.description}}</p>
+        <p><a href= "{{url_for('editItem', itemName = item.itemName, categoryName = item.category_name)}}"><button class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></button></a> <a href= "{{url_for('deleteItem',itemName = item.itemName, categoryName = item.category_name)}}"><button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></button></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock%}
