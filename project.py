@@ -3,7 +3,8 @@ from functools import wraps
 from sqlalchemy import create_engine, asc, desc
 from sqlalchemy.orm import sessionmaker, scoped_session
 from database_setup import Base, Categories, Items, User
-from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
+from flask import (Flask, render_template, url_for,
+                   request, redirect, flash, jsonify)
 from flask import session as login_session
 
 from oauth2client.client import flow_from_clientsecrets
@@ -30,7 +31,7 @@ session = scoped_session(sessionmaker(bind=engine))
 # login_session to verify user.
 
 
-"""<------------------------------  login section for google account   --------------------------------->"""
+"""<-------------------  login section for google account  -------------->"""
 # login decorator function
 
 
@@ -103,8 +104,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+                   json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -134,7 +135,8 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;\
+    -webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print("done!")
     return output
@@ -152,8 +154,8 @@ def gdisconnect():
     print('In gdisconnect access token is %s', access_token)
     print('User name is: ')
     print(login_session['username'])
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session[
-        'access_token']
+    url = 'https://accounts.google.com/o/oauth2/\
+           revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print('result is ')
@@ -174,10 +176,10 @@ def gdisconnect():
         return response
 
 
-"""<-------------------------  end of login section for google account   ------------------------------------>"""
+"""<------  End of login section for google account  ------>"""
 
 
-"""<------------------  Start of CRUD operations for Database and routes in the web app   ------------------->"""
+"""<--- Start of CRUD operations for Database and routes in the web app -->"""
 
 
 @app.route('/')
@@ -188,7 +190,8 @@ def showAllCategories():
     items = session.query(Items).order_by(desc(Items.itemName)).limit(5).all()
     # Protecting the pages on the basis of login.
     if 'username' not in login_session:
-        return render_template('publicHome.html', categories=categories, items=items)
+        return render_template('publicHome.html', categories=categories,
+                               items=items)
     else:
         return render_template('home.html', categories=categories, items=items)
 
@@ -202,13 +205,16 @@ def addCategory():
         # if user typed in a name for the category
         if request.form['name']:
             for category in categories:
-                # since, we are quering categories in edit and delete functions,
-                # we cannot have duplicate categoryName, making sure, there are
-                # no duplicate names for categoryName.
+                # since, we are quering categories in edit and delete
+                # functions.we cannot have duplicate categoryName,
+                # making sure, there are no duplicate names for
+                # categoryName.
                 if request.form['name'] == category.categoryName:
-                    return "<script>function myFunction(){alert('Choose different name');}\
-		</script><body onload = 'myFunction()'>"
-            categoryToAdd = Categories(categoryName=request.form['name'], categorySector=request.form['sector'],
+                    return "<script>function myFunction(){alert\
+                    ('Choose different name');}</script><body\
+                     onload = 'myFunction()'>"
+            categoryToAdd = Categories(categoryName=request.form['name'],
+                                       categorySector=request.form['sector'],
                                        categoryDetails=request.form['details'],
                                        priceRange=request.form['pricerange'],
                                        categoryAgeGroup=request.form[
@@ -233,7 +239,7 @@ def editCategory(categoryName):
     # only the user who created category should be able to edit the item.
     if categoryToEdit.user_id != login_session['user_id']:
         return "<script>function myFunction(){alert('Not Authorized');}\
-		</script><body onload = 'myFunction()'>"
+        </script><body onload = 'myFunction()'>"
     itemsInCategory = session.query(Items).filter_by(
         category_name=categoryName).all()
     if request.method == 'POST':
@@ -243,7 +249,7 @@ def editCategory(categoryName):
             categoryToEdit.categoryDetails = request.form['details']
             categoryToEdit.priceRange = request.form['pricerange']
             categoryToEdit.categoryAgeGroup = request.form['agegroup']
-# category_name is relationship to the category table, while we edit categoryName
+# category_name has relation to the category table,while we edit categoryName
 # we have to make sure that the category_name in the items table is
 # changed as well.
             for item in itemsInCategory:
@@ -266,7 +272,7 @@ def deleteCategory(categoryName):
     # only user who created the category should be able to delete the item.
     if categoryToDelete.user_id != login_session['user_id']:
         return "<script>function myFunction(){alert('Not Authorized');}\
-		</script><body onload = 'myFunction()'>"
+        </script><body onload = 'myFunction()'>"
     # if there are any items related to categoryName, query that as well.
     try:
         itemsInCategory = session.query(Items).filter_by(
@@ -294,12 +300,14 @@ def showItems(categoryName):
         categoryName=categoryName).one()
     items = session.query(Items).filter_by(
         category_name=category.categoryName).all()
-    # only logged in users should be able to edit and delete items. showitems_public
-    # doesnt have options to edit and delete.
+    # only logged in users should be able to edit and delete items.
+    # showitems_public doesnt have options to edit and delete.
     if 'username' not in login_session:
-        return render_template('showItems_public.html', category=category, items=items)
+        return render_template('showItems_public.html',
+                               category=category, items=items)
     else:
-        return render_template('showItems.html', category=category, items=items)
+        return render_template('showItems.html',
+                               category=category, items=items)
 
 
 @app.route('/catalog/<string:categoryName>/<string:itemName>/')
@@ -320,12 +328,13 @@ def addItems(categoryName):
         categoryName=categoryName).one()
     if category.user_id != login_session['user_id']:
         return "<script>function myFunction(){alert('Not Authorized');}\
-		</script><body onload = 'myFunction()'>"
+        </script><body onload = 'myFunction()'>"
     if request.method == 'POST':
         itemToAdd = Items(itemName=request.form['name'],
                           description=request.form['description'],
                           price=request.form['price'],
-                          category_name=categoryName, user_id=login_session['user_id'])
+                          category_name=categoryName,
+                          user_id=login_session['user_id'])
         session.add(itemToAdd)
         session.commit()
         flash("Item %s successfully added in %s !" %
@@ -335,7 +344,8 @@ def addItems(categoryName):
         return render_template('addItem.html', category=category)
 
 
-@app.route('/catalog/<string:categoryName>/<string:itemName>/edit/', methods=['GET', 'POST'])
+@app.route('/catalog/<string:categoryName>/<string:itemName>/edit/',
+           methods=['GET', 'POST'])
 # if a user not in login session, gets redirected to the login page.
 @login_required
 def editItem(itemName, categoryName):
@@ -343,7 +353,7 @@ def editItem(itemName, categoryName):
         itemName=itemName, category_name=categoryName).one()
     if itemToEdit.user_id != login_session['user_id']:
         return "<script>function myFunction(){alert('Not Authorized');}\
-		</script><body onload = 'myFunction()'>"
+        </script><body onload = 'myFunction()'>"
     if request.method == 'POST':
         if request.form['name']:
             itemToEdit.itemName = request.form['name']
@@ -359,7 +369,8 @@ def editItem(itemName, categoryName):
         return render_template('editItem.html', item=itemToEdit)
 
 
-@app.route('/catalog/<string:categoryName>/<string:itemName>/delete/', methods=['GET', 'POST'])
+@app.route('/catalog/<string:categoryName>/<string:itemName>/delete/',
+           methods=['GET', 'POST'])
 # if a user not in login session, gets redirected to the login page.
 @login_required
 def deleteItem(categoryName, itemName):
@@ -367,7 +378,7 @@ def deleteItem(categoryName, itemName):
         itemName=itemName, category_name=categoryName).one()
     if itemToDelete.user_id != login_session['user_id']:
         return "<script>function myFunction(){alert('Not Authorized');}\
-		</script><body onload = 'myFunction()'>"
+        </script><body onload = 'myFunction()'>"
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -377,16 +388,17 @@ def deleteItem(categoryName, itemName):
         return render_template('deleteItem.html', item=itemToDelete)
 
 
-"""<------------------  End of CRUD operations for Database and routes in the web app   ------------------>"""
+"""<---- End of CRUD operations for Database and routes in the web app -->"""
 
 
-"""<------------------  Start of creating a users   ------------------------------------------------------>"""
+"""<------------------  Start of creating a users   --------------------->"""
 
 # takes the login_session and returns to user's id.
 
 
 def CreateUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session['email'],
+    newUser = User(name=login_session['username'],
+                   email=login_session['email'],
                    picture=login_session['picture'])
     session.add(newUser)
     session.commit()
@@ -400,6 +412,7 @@ def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
+
 # takes the user's email and returns the id.
 
 
@@ -410,10 +423,11 @@ def getUserID(email):
     except:
         return None
 
-"""<------------------  End of creating a users   ------------------------------------------------------->"""
+
+"""<------------  End of creating a users ------------------------>"""
 
 
-"""<------------------  Start of creating JSON end points  ---------------------------------------------->"""
+"""<------------  Start of creating JSON end points -------------->"""
 
 
 @app.route('/catalog.json/')
@@ -433,7 +447,8 @@ def itemJSON(itemName):
     item = session.query(Items).filter_by(itemName=itemName).one()
     return jsonify(item=[item.serialize])
 
-"""<------------------  End of creating JSON end points  ----------------------------------------------->"""
+
+"""<------------------  End of creating JSON end points ----------->"""
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
