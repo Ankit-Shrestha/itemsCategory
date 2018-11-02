@@ -28,7 +28,7 @@ class User(Base):
 class Categories(Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
-    categoryName = Column(String(250), nullable=False)
+    categoryName = Column(String(250), nullable=False,unique=True)
     categoryDetails = Column(String(1000), nullable=False)
     priceRange = Column(String(20))
     categorySector = Column(String(30), nullable=False)
