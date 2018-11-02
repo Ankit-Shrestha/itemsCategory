@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#for deploymnet
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

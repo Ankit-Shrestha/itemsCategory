@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#for deployment
 from functools import wraps
 from sqlalchemy import create_engine, asc, desc
 from sqlalchemy.orm import sessionmaker, scoped_session

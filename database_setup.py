@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#for deployment
 from sqlalchemy import Column, String, Integer, ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -69,5 +70,5 @@ class Items(Base):
         }
 
 
-engine = create_engine('sqlite:///ItemsCatalog.db')
+engine = create_engine('postgresql:///ItemsCatalog.db:surviver123@localhost/catalog')
 Base.metadata.create_all(engine)
