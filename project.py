@@ -23,7 +23,7 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Items Catalog App"
 
-engine = create_engine('postgresql://catalog.db:\'surviver123\'@localhost/catalog')
+engine = create_engine('postgresql://catalog:surviver123@localhost/catalog')
 Base.metadata.bind = engine
 
 session = scoped_session(sessionmaker(bind=engine))
